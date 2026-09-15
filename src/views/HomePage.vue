@@ -44,6 +44,7 @@
       <div class="page-container">
 
         <PetForm
+          ref="petFormRef"
           :editing-id="editingId"
           :pet="selectedPet"
           @save="savePet"
@@ -99,6 +100,11 @@ const editingId = ref<string | null>(null);
 const selectedPet = ref<Pet>();
 
 
+// PET FORM REFERENCE
+
+const petFormRef = ref<InstanceType<typeof PetForm> | null>(null);
+
+
 // LOAD PETS
 
 onMounted(() => {
@@ -114,21 +120,28 @@ const savePet = async (pet: Pet) => {
 
   try {
 
+    // UPDATE EXISTING PET
     if (editingId.value) {
 
       await updatePet(editingId.value, pet);
 
       alert('Pet updated successfully!');
 
-    } else {
+      cancelEdit();
+
+    }
+
+    // ADD NEW PET
+    else {
 
       await addPet(pet);
 
       alert('Pet added successfully!');
 
-    }
+      // CLEAR THE FORM AFTER ADDING
+      petFormRef.value?.resetForm();
 
-    cancelEdit();
+    }
 
   } catch (error) {
 
@@ -184,6 +197,8 @@ const cancelEdit = () => {
   editingId.value = null;
 
   selectedPet.value = undefined;
+
+  petFormRef.value?.resetForm();
 
 };
 

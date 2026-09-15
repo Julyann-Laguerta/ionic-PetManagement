@@ -128,15 +128,15 @@ const resetForm = () => {
 };
 
 watch(
-  () => props.editingId,
-  (editingId) => {
-    if (editingId && props.pet) {
-      form.petName = props.pet.petName || '';
-      form.animalType = props.pet.animalType || '';
-      form.breed = props.pet.breed || '';
-      form.age = props.pet.age || '';
-      form.ownerName = props.pet.ownerName || '';
-      form.notes = props.pet.notes || '';
+  () => props.pet,
+  (pet) => {
+    if (pet) {
+      form.petName = pet.petName || '';
+      form.animalType = pet.animalType || '';
+      form.breed = pet.breed || '';
+      form.age = pet.age || '';
+      form.ownerName = pet.ownerName || '';
+      form.notes = pet.notes || '';
     } else {
       resetForm();
     }
@@ -170,4 +170,8 @@ const cancel = () => {
   resetForm();
   emit('cancel');
 };
+
+defineExpose({
+  resetForm
+});
 </script>
