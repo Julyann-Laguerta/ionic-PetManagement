@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">pet-information-manager</string>
+    <string name="title_activity_main">pet-information-manager</string>
+    <string name="package_name">com.example.petmanager</string>
+    <string name="custom_url_scheme">com.example.petmanager</string>
+</resources>
