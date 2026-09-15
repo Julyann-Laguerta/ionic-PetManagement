@@ -118,17 +118,37 @@ const form = reactive<Pet>({
   notes: ''
 });
 
+const resetForm = () => {
+  form.petName = '';
+  form.animalType = '';
+  form.breed = '';
+  form.age = '';
+  form.ownerName = '';
+  form.notes = '';
+};
+
 watch(
   () => props.pet,
   (pet) => {
-    form.petName = pet?.petName || '';
-    form.animalType = pet?.animalType || '';
-    form.breed = pet?.breed || '';
-    form.age = pet?.age || '';
-    form.ownerName = pet?.ownerName || '';
-    form.notes = pet?.notes || '';
+    if (pet) {
+      form.petName = pet.petName || '';
+      form.animalType = pet.animalType || '';
+      form.breed = pet.breed || '';
+      form.age = pet.age || '';
+      form.ownerName = pet.ownerName || '';
+      form.notes = pet.notes || '';
+    }
   },
   { immediate: true }
+);
+
+watch(
+  () => props.editingId,
+  (editingId) => {
+    if (!editingId) {
+      resetForm();
+    }
+  }
 );
 
 const save = () => {
@@ -147,6 +167,7 @@ const save = () => {
 };
 
 const cancel = () => {
+  resetForm();
   emit('cancel');
 };
 </script>
