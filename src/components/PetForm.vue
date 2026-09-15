@@ -128,42 +128,42 @@ const resetForm = () => {
 };
 
 watch(
-  () => props.pet,
-  (pet) => {
-    if (pet) {
-      form.petName = pet.petName || '';
-      form.animalType = pet.animalType || '';
-      form.breed = pet.breed || '';
-      form.age = pet.age || '';
-      form.ownerName = pet.ownerName || '';
-      form.notes = pet.notes || '';
+  () => props.editingId,
+  (editingId) => {
+    if (editingId && props.pet) {
+      form.petName = props.pet.petName || '';
+      form.animalType = props.pet.animalType || '';
+      form.breed = props.pet.breed || '';
+      form.age = props.pet.age || '';
+      form.ownerName = props.pet.ownerName || '';
+      form.notes = props.pet.notes || '';
+    } else {
+      resetForm();
     }
   },
   { immediate: true }
 );
 
-watch(
-  () => props.editingId,
-  (editingId) => {
-    if (!editingId) {
-      resetForm();
-    }
-  }
-);
-
 const save = () => {
   if (
-    !form.petName ||
-    !form.animalType ||
-    !form.breed ||
+    !form.petName.trim() ||
+    !form.animalType.trim() ||
+    !form.breed.trim() ||
     !form.age ||
-    !form.ownerName
+    !form.ownerName.trim()
   ) {
     alert('Please fill in all required fields.');
     return;
   }
 
-  emit('save', { ...form });
+  emit('save', {
+    petName: form.petName.trim(),
+    animalType: form.animalType.trim(),
+    breed: form.breed.trim(),
+    age: form.age,
+    ownerName: form.ownerName.trim(),
+    notes: form.notes.trim()
+  });
 };
 
 const cancel = () => {
