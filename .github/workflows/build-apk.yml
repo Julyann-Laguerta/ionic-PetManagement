@@ -47,7 +47,40 @@ jobs:
         run: |
           printf '%s\n' "$FIREBASE_ENV" > .env
 
+      - name: Verify Firebase environment
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
 
+          const required = [
+            'VITE_FIREBASE_API_KEY',
+            'VITE_FIREBASE_AUTH_DOMAIN',
+            'VITE_FIREBASE_DATABASE_URL',
+            'VITE_FIREBASE_PROJECT_ID',
+            'VITE_FIREBASE_STORAGE_BUCKET',
+            'VITE_FIREBASE_MESSAGING_SENDER_ID',
+            'VITE_FIREBASE_APP_ID'
+          ];
+
+          const lines = fs.readFileSync('.env', 'utf8').split(/\r?\n/);
+          const env = {};
+
+          for (const line of lines) {
+            const i = line.indexOf('=');
+            if (i > 0) {
+              env[line.slice(0, i)] = line.slice(i + 1);
+            }
+          }
+
+          for (const key of required) {
+            if (!env[key]) {
+              console.log(`${key}: MISSING`);
+            } else {
+              console.log(`${key}: present (${env[key].length} characters)`);
+            }
+          }
+          NODE
+          
       # ----------------------------------------------------------
       # 4. Build Ionic/Vue application
       # ----------------------------------------------------------
